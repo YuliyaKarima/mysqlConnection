@@ -15,11 +15,6 @@ public class UserDAOTest {
     private Connection connection = JDBCFactory.getConnection();
     private PreparedStatement statement;
 
-    @Before
-    public void init() {
-        PreparedStatement statement;
-    }
-
     @Test
     public void getUser() throws Exception {
         User userExpected = new User();
