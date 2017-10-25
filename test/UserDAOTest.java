@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -10,7 +11,14 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 public class UserDAOTest {
-    UserDAO userDAO = new UserDAO();
+    private UserDAO userDAO = new UserDAO();
+    private Connection connection = JDBCFactory.getConnection();
+    private PreparedStatement statement;
+
+    @Before
+    public void init() {
+        PreparedStatement statement;
+    }
 
     @Test
     public void getUser() throws Exception {
@@ -30,8 +38,8 @@ public class UserDAOTest {
         //when
         userDAO.updateUserName(2, expectedNewName);
         //then
-        try (Connection connection = JDBCFactory.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM new_schema.user where iduser = 2");
+        try {
+            statement = connection.prepareStatement("SELECT * FROM new_schema.user where iduser = 2");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 actualNewName = rs.getString(2);
@@ -50,8 +58,8 @@ public class UserDAOTest {
         //when
         userDAO.deleteUserByID(7);
         //then
-        try (Connection connection = JDBCFactory.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM new_schema.user");
+        try {
+            statement = connection.prepareStatement("SELECT * FROM new_schema.user");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 actualSize++;
@@ -74,8 +82,8 @@ public class UserDAOTest {
         //when
         userDAO.insertUser(userExpected);
         //then
-        try (Connection connection = JDBCFactory.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM new_schema.user");
+        try {
+            statement = connection.prepareStatement("SELECT * FROM new_schema.user");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 actualSize++;
