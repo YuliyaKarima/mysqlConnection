@@ -7,7 +7,7 @@ import exception.UserNotFoundException;
 import user.User;
 
 /**
- * Class provides methods for user opreations such as login ang signing up
+ * Class provides methods for user opreations such as login and signing up
  */
 public class UserService {
     UserDAO userDAO;
