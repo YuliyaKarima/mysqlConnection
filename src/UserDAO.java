@@ -28,8 +28,7 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        user.getDateOfBirthday().getClass();
-        return user;
+       return user;
     }
 
     /**
