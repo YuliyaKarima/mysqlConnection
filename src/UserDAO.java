@@ -2,11 +2,10 @@
 import java.sql.*;
 
 public class UserDAO {
-    private String getQuery = "SELECT * FROM new_schema.user ";
-    private String updateNameQuery = "UPDATE  new_schema.user SET name =  ";
-    private String deleteQuery = "DELETE from new_schema.user";
-    private String insertQuery = "INSERT INTO new_schema.user values ";
-    private String whereId = " where iduser = ";
+    private String getQuery = "SELECT * FROM new_schema.user where iduser = ? ";
+    private String updateNameQuery = "UPDATE  new_schema.user SET name =  ? where iduser = ? ";
+    private String deleteQuery = "DELETE from new_schema.user where iduser = ?";
+    private String insertQuery = "INSERT INTO new_schema.user (`name`, `date_birthday`, `login`) values ";
     private Connection connection = JDBCFactory.getConnection();
 
     /**
@@ -17,10 +16,9 @@ public class UserDAO {
      */
     public User getUser(int userId) {
         User user = new User();
-        try (PreparedStatement statement = connection.prepareStatement(getQuery + whereId + userId)) {
+        try (PreparedStatement statement = connection.prepareStatement(getQuery)) {
+            statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
-            //set after commit = false
-            //Тогда в catch connection.false
             while (rs.next()) {
                 user.setName(rs.getString(2));
                 user.setDateOfBirthday(rs.getTimestamp(3).toLocalDateTime());
@@ -41,9 +39,10 @@ public class UserDAO {
      * @param name   new user name
      */
     public void updateUserName(int userId, String name) {
-        String sql = updateNameQuery + "'" + name + "'" + whereId + userId;
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);
+        try (PreparedStatement statement = connection.prepareStatement(updateNameQuery)) {
+            statement.setString(1, name);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,9 +54,9 @@ public class UserDAO {
      * @param userId
      */
     public void deleteUserByID(int userId) {
-        String sql = deleteQuery + whereId + userId;
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);
+        try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -70,18 +69,10 @@ public class UserDAO {
      */
     public void insertUser(User newUser) {
         String sql = null;
-        try (Statement statement = connection.createStatement();
-             PreparedStatement statementAll = connection.prepareStatement("SELECT * FROM new_schema.user")) {
-            ResultSet rs = statementAll.executeQuery();
-            int id = 0;
-            while (rs.next()) {
-                id = rs.getInt(1);
-            }
-            System.out.println(id);
-            sql = insertQuery + "(" + (id + 1) + ", '" + newUser.getName() + "'"
+        try (Statement statement = connection.createStatement()) {
+            sql = insertQuery + "(" + "'" + newUser.getName() + "'"
                     + ", " + "'" + newUser.getDateOfBirthday().toLocalDate() + "'"
                     + ", " + "'" + newUser.getLogin() + "'" + ")";
-            System.err.println(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();

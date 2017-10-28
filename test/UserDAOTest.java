@@ -12,8 +12,6 @@ import static org.junit.Assert.*;
 
 public class UserDAOTest {
     private UserDAO userDAO = new UserDAO();
-    private Connection connection = JDBCFactory.getConnection();
-    private PreparedStatement statement;
 
     @Test
     public void getUser() throws Exception {
@@ -31,61 +29,32 @@ public class UserDAOTest {
         String expectedNewName = "Bill";
         String actualNewName = null;
         //when
-        userDAO.updateUserName(2, expectedNewName);
+        userDAO.updateUserName(5, expectedNewName);
         //then
-        try {
-            statement = connection.prepareStatement("SELECT * FROM new_schema.user where iduser = 2");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                actualNewName = rs.getString(2);
-            }
-        } catch (SQLException e) {
-
-        }
-        assertEquals("test failed", expectedNewName, actualNewName);
+        User updatedUser = userDAO.getUser(5);
+        assertEquals("test failed", expectedNewName, updatedUser.getName());
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void deleteUserById() throws Exception {
         //given
-        int expectedSize = 10;
-        int actualSize = 0;
         //when
-        userDAO.deleteUserByID(7);
+        userDAO.deleteUserByID(10);
         //then
-        try {
-            statement = connection.prepareStatement("SELECT * FROM new_schema.user");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                actualSize++;
-            }
-        } catch (SQLException e) {
-
-        }
-        assertEquals("test failed", expectedSize, actualSize);
+        userDAO.getUser(10);
     }
 
     @Test
     public void insertUser() throws Exception {
         //given
-        int expectedSize = 11;
-        int actualSize = 0;
-        User userExpected = new User();
-        userExpected.setName("Dave");
-        userExpected.setDateOfBirthday(LocalDateTime.of(1978, 03, 13, 0, 0));
-        userExpected.setLogin("dave");
+        User newUser = new User();
+        newUser.setName("Anna");
+        newUser.setDateOfBirthday(LocalDateTime.of(1994, 07, 8, 0, 0));
+        newUser.setLogin("anna");
         //when
-        userDAO.insertUser(userExpected);
+        userDAO.insertUser(newUser);
         //then
-        try {
-            statement = connection.prepareStatement("SELECT * FROM new_schema.user");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                actualSize++;
-            }
-        } catch (SQLException e) {
-
-        }
-        assertEquals("test failed", expectedSize, actualSize);
+        User userExpected = userDAO.getUser(16);
+        assertEquals("test failed", userExpected, newUser);
     }
 }
