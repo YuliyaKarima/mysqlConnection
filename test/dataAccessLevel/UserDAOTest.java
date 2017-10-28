@@ -1,12 +1,10 @@
-import org.junit.Before;
-import org.junit.Test;
+package dataAccessLevel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import dataAccessLevel.UserDAO;
+import org.junit.Test;
+import user.User;
+
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -14,12 +12,24 @@ public class UserDAOTest {
     private UserDAO userDAO = new UserDAO();
 
     @Test
-    public void getUser() throws Exception {
+    public void getUserId() throws Exception {
         User userExpected = new User();
         userExpected.setName("James");
         userExpected.setDateOfBirthday(LocalDateTime.of(1978, 03, 13, 0, 0));
         userExpected.setLogin("james");
         User userActual = userDAO.getUser(1);
+        assertEquals("test failed", userExpected, userActual);
+    }
+
+    @Test
+    public void getUserLogin() throws Exception {
+        User userExpected = new User();
+        userExpected.setName("James");
+        userExpected.setDateOfBirthday(LocalDateTime.of(1978, 03, 13, 0, 0));
+        userExpected.setLogin("james");
+        userExpected.setPassword("123123");
+        userExpected.setEmail("james@gmail.com");
+        User userActual = userDAO.getUserByLogin("james");
         assertEquals("test failed", userExpected, userActual);
     }
 

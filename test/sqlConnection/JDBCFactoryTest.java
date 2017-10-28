@@ -1,4 +1,7 @@
+package sqlConnection;
+
 import org.junit.Test;
+import sqlConnection.JDBCFactory;
 
 import java.sql.Connection;
 

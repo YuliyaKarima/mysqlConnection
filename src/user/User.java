@@ -1,10 +1,32 @@
-import java.time.LocalDateTime;
-import java.util.Date;
+package user;
 
+import java.time.LocalDateTime;
+
+/**
+ * Encapsulates user's data
+ */
 public class User {
     private String name;
     private LocalDateTime dateOfBirthday;
     private String login;
+    private String password;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getName() {
         return name;
