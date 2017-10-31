@@ -1,17 +1,26 @@
 package sqlConnection;
 
+import service.PropertiesService;
+
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Provides method for getting MySQL DB connection
  */
 public class JDBCFactory {
+    private static Properties properties =
+            PropertiesService.getProperty("connection.properties");
+
     /**
      * @return MySQL DB connection
      */
     public static Connection getConnection() {
+
+
         Connection connection = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -24,7 +33,9 @@ public class JDBCFactory {
 
         try {
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/new_schema", "root", "ZinedinZidan16!");
+                    properties.getProperty("url"),
+                    properties.getProperty("user"),
+                    properties.getProperty("password"));
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
             e.printStackTrace();
